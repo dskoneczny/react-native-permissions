@@ -3,14 +3,13 @@
 A unified permissions API for React Native on iOS, Android and Windows.<br>
 (For Windows only builds 18362 and later are supported)
 
-[![npm version](https://badge.fury.io/js/react-native-permissions.svg)](https://www.npmjs.org/package/react-native-permissions)
-[![npm](https://img.shields.io/npm/dt/react-native-permissions.svg)](https://www.npmjs.org/package/react-native-permissions)
-[![MIT](https://img.shields.io/dub/l/vibe-d.svg)](https://opensource.org/licenses/MIT)
-<br>
-[![Platform - Android](https://img.shields.io/badge/platform-Android-3ddc84.svg?style=flat&logo=android)](https://www.android.com)
-[![Platform - iOS](https://img.shields.io/badge/platform-iOS-000.svg?style=flat&logo=apple)](https://developer.apple.com/ios)
-[![Platform - Windows](https://img.shields.io/badge/platform-Windows-0067b8.svg?style=flat&logo=windows)](https://www.microsoft.com/en-us/windows)
-
+[![mit licence](https://img.shields.io/dub/l/vibe-d.svg?style=for-the-badge)](https://github.com/zoontek/react-native-permissions/blob/main/LICENSE)
+[![npm version](https://img.shields.io/npm/v/react-native-permissions?style=for-the-badge)](https://www.npmjs.org/package/react-native-permissions)
+[![npm downloads](https://img.shields.io/npm/dt/react-native-permissions.svg?label=downloads&style=for-the-badge)](https://www.npmjs.org/package/react-native-permissions)
+<br />
+[![platform - android](https://img.shields.io/badge/platform-Android-3ddc84.svg?logo=android&style=for-the-badge)](https://www.android.com)
+[![platform - ios](https://img.shields.io/badge/platform-iOS-000.svg?logo=apple&style=for-the-badge)](https://developer.apple.com/ios)
+[![platform - windows](https://img.shields.io/badge/platform-Windows-0067b8.svg?logo=windows&style=for-the-badge)](https://www.microsoft.com/en-us/windows)
 
 ## Funding
 
@@ -179,19 +178,26 @@ Add all wanted permissions to your app `android/app/src/main/AndroidManifest.xml
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
   <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
   <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+  <uses-permission android:name="com.android.voicemail.permission.ADD_VOICEMAIL" />
   <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
   <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
   <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
   <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
   <uses-permission android:name="android.permission.BODY_SENSORS" />
+  <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
   <uses-permission android:name="android.permission.CALL_PHONE" />
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+  <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
   <uses-permission android:name="android.permission.READ_CALENDAR" />
   <uses-permission android:name="android.permission.READ_CALL_LOG" />
   <uses-permission android:name="android.permission.READ_CONTACTS" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+  <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+  <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
   <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
   <uses-permission android:name="android.permission.READ_PHONE_STATE" />
   <uses-permission android:name="android.permission.READ_SMS" />
@@ -201,11 +207,11 @@ Add all wanted permissions to your app `android/app/src/main/AndroidManifest.xml
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <uses-permission android:name="android.permission.SEND_SMS" />
   <uses-permission android:name="android.permission.USE_SIP" />
+  <uses-permission android:name="android.permission.UWB_RANGING" />
   <uses-permission android:name="android.permission.WRITE_CALENDAR" />
   <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
   <uses-permission android:name="android.permission.WRITE_CONTACTS" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  <uses-permission android:name="com.android.voicemail.permission.ADD_VOICEMAIL" />
 
   <!-- … -->
 
@@ -365,32 +371,32 @@ As permissions are not handled in the same way on iOS and Android, this library 
                 ╚═════╝                 │ RESULTS.UNAVAILABLE │
                    │                    └─────────────────────┘
            Is the permission
-             requestable ?
-                   │           ╔════╗
-                   ├───────────║ NO ║──────────────┐
-                   │           ╚════╝              │
-                ╔═════╗                            ▼
-                ║ YES ║                  ┌───────────────────┐
-                ╚═════╝                  │ RESULTS.BLOCKED / │
-                   │                     │  RESULTS.GRANTED  │
-                   ▼                     └───────────────────┘
+           already granted ?
+                   │           ╔═════╗
+                   ├───────────║ YES ║─────────────┐
+                   │           ╚═════╝             │
+                ╔════╗                             ▼
+                ║ NO ║                   ┌───────────────────┐
+                ╚════╝                   │  RESULTS.GRANTED  │
+                   │                     └───────────────────┘
+                   ▼
           ┌────────────────┐
           │ RESULTS.DENIED │◀──────────────────────┐
           └────────────────┘                       │
                    │                               │
                    ▼                               │
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓         ╔════╗
-┃ request(PERMISSIONS.ANDROID.CAMERA) ┃         ║ NO ║
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛         ╚════╝
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓         ╔═════╗
+┃ request(PERMISSIONS.ANDROID.CAMERA) ┃         ║ YES ║
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛         ╚═════╝
                    │                               │
          Does the user accept                      │
             the request ?                          │
-                   │           ╔════╗     Does the user check
-                   ├───────────║ NO ║─────"Never ask again" ?
+                   │           ╔════╗      Is the permission
+                   ├───────────║ NO ║──── still requestable ?
                    │           ╚════╝              │
-                ╔═════╗                         ╔═════╗
-                ║ YES ║                         ║ YES ║
-                ╚═════╝                         ╚═════╝
+                ╔═════╗                         ╔════╗
+                ║ YES ║                         ║ NO ║
+                ╚═════╝                         ╚════╝
                    │                               │
                    ▼                               ▼
           ┌─────────────────┐             ┌─────────────────┐
@@ -470,14 +476,20 @@ PERMISSIONS.ANDROID.BLUETOOTH_ADVERTISE;
 PERMISSIONS.ANDROID.BLUETOOTH_CONNECT;
 PERMISSIONS.ANDROID.BLUETOOTH_SCAN;
 PERMISSIONS.ANDROID.BODY_SENSORS;
+PERMISSIONS.ANDROID.BODY_SENSORS_BACKGROUND;
 PERMISSIONS.ANDROID.CALL_PHONE;
 PERMISSIONS.ANDROID.CAMERA;
 PERMISSIONS.ANDROID.GET_ACCOUNTS;
+PERMISSIONS.ANDROID.NEARBY_WIFI_DEVICES;
+PERMISSIONS.ANDROID.POST_NOTIFICATIONS;
 PERMISSIONS.ANDROID.PROCESS_OUTGOING_CALLS;
 PERMISSIONS.ANDROID.READ_CALENDAR;
 PERMISSIONS.ANDROID.READ_CALL_LOG;
 PERMISSIONS.ANDROID.READ_CONTACTS;
 PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
+PERMISSIONS.ANDROID.READ_MEDIA_AUDIO;
+PERMISSIONS.ANDROID.READ_MEDIA_IMAGES;
+PERMISSIONS.ANDROID.READ_MEDIA_VIDEO;
 PERMISSIONS.ANDROID.READ_PHONE_NUMBERS;
 PERMISSIONS.ANDROID.READ_PHONE_STATE;
 PERMISSIONS.ANDROID.READ_SMS;
@@ -487,6 +499,7 @@ PERMISSIONS.ANDROID.RECEIVE_WAP_PUSH;
 PERMISSIONS.ANDROID.RECORD_AUDIO;
 PERMISSIONS.ANDROID.SEND_SMS;
 PERMISSIONS.ANDROID.USE_SIP;
+PERMISSIONS.ANDROID.UWB_RANGING;
 PERMISSIONS.ANDROID.WRITE_CALENDAR;
 PERMISSIONS.ANDROID.WRITE_CALL_LOG;
 PERMISSIONS.ANDROID.WRITE_CONTACTS;
@@ -698,6 +711,8 @@ type PermissionStatus = 'unavailable' | 'denied' | 'limited' | 'granted' | 'bloc
 
 Check one permission status.
 
+_⚠️  Android will never return `blocked` after a `check`, you have to request the permission to get the info._
+
 ```ts
 function check(permission: string): Promise<PermissionStatus>;
 ```
@@ -797,8 +812,8 @@ checkNotifications().then(({status, settings}) => {
 
 Request notifications permission status and get notifications settings values.
 
-You cannot request notifications permissions on Windows. Disabling or enabling notifications can only be done through the App Settings.
-You cannot request notifications permissions on Android. `requestNotifications` is the same than `checkNotifications` on this platform.
+- You have to [target at least SDK 33](https://github.com/zoontek/react-native-permissions/releases/tag/3.5.0) to perform request on Android 13+. The permission is always granted for prior versions.
+- You cannot request notifications permissions on Windows. Disabling / enabling them can only be done through the App Settings.
 
 ```ts
 // only used on iOS
@@ -844,6 +859,8 @@ requestNotifications(['alert', 'sound']).then(({status, settings}) => {
 #### checkMultiple
 
 Check multiples permissions in parallel.
+
+_⚠️  Android will never return `blocked` after a `check`, you have to request the permission to get the info._
 
 ```ts
 function checkMultiple<P extends Permission[]>(
